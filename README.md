@@ -43,12 +43,30 @@ Zombie                   # pick a handle
 
 ## Firmware
 
+### Just flash it
+
+Every push builds a Heltec V3 image in GitHub Actions (artifact on the Actions tab; tagged
+`v*` builds become draft releases). Grab `MeshBBS_Heltec_v3-<version>-merged.bin` and:
+
+```bash
+pip install esptool
+esptool.py --chip esp32s3 --port /dev/cu.usbserial-XXXX write_flash 0x0 MeshBBS_Heltec_v3-<version>-merged.bin
+```
+
+The merged image contains bootloader, partition table and app, so it goes to address 0.
+Any browser flasher that takes a single image at 0x0 works too. Your node identity lives
+in the SPIFFS partition and survives the flash; flash a companion image back later to
+turn the node into a companion again.
+
+### Build it yourself
+
 Expects a MeshCore checkout next to this repo: `../MeshCore-upstream` (clone of
 https://github.com/meshcore-dev/MeshCore). `firmware/lib/ed25519` is a symlink into it.
 
 ```bash
 cd firmware
 pio run -e Heltec_v3_bbs                    # build
+pio run -e Heltec_v3_bbs -t mergebin        # + single flashable image (firmware-merged.bin)
 pio run -e Heltec_v3_bbs -t upload          # flash (Heltec on USB)
 pio device monitor                          # serial console = sysop console
 ```
