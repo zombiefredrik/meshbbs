@@ -236,7 +236,7 @@ static void testWhoStatsGoodbye(World& w) {
   CHECK_CONTAINS(w.out, "Call #2");
   CHECK(!w.act.broadcast);
   w.in(2, "?");
-  CHECK_CONTAINS(w.out, "-= TestBBS =- [GENERAL]");
+  CHECK_CONTAINS(w.out, "-= TestBBS /X =- [GENERAL]");
   w.in(2, "Z");
   CHECK_CONTAINS(w.out, "Unknown command 'Z'");
   w.in(2, "H");

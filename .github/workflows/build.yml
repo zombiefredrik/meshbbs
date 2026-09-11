@@ -29,10 +29,10 @@ jobs:
       matrix:
         env: [Heltec_v3_bbs, Heltec_v4_bbs]
     steps:
-      - name: Checkout meshbbs
+      - name: Checkout meshxpress
         uses: actions/checkout@v4
         with:
-          path: meshbbs
+          path: meshxpress
 
       - name: Checkout MeshCore
         uses: actions/checkout@v4
@@ -49,7 +49,7 @@ jobs:
             ~/.platformio/.cache
             ~/.platformio/packages
             ~/.platformio/platforms
-          key: ${{ runner.os }}-pio-${{ hashFiles('meshbbs/firmware/platformio.ini') }}
+          key: ${{ runner.os }}-pio-${{ hashFiles('meshxpress/firmware/platformio.ini') }}
 
       - uses: actions/setup-python@v5
         with:
@@ -60,12 +60,12 @@ jobs:
 
       - name: Version string
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/* ]]; then V="${GITHUB_REF#refs/tags/}"; else V="dev-$(git -C meshbbs rev-parse --short HEAD)"; fi
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then V="${GITHUB_REF#refs/tags/}"; else V="dev-$(git -C meshxpress rev-parse --short HEAD)"; fi
           echo "BBS_VERSION=$V" >> $GITHUB_ENV
           echo "BBS_DATE=$(date '+%d-%b-%Y')" >> $GITHUB_ENV
 
       - name: Build ${{ matrix.env }}
-        working-directory: meshbbs/firmware
+        working-directory: meshxpress/firmware
         env:
           PLATFORMIO_BUILD_FLAGS: -D FIRMWARE_VERSION='"${{ env.BBS_VERSION }}"' -D FIRMWARE_BUILD_DATE='"${{ env.BBS_DATE }}"'
         run: pio run -e ${{ matrix.env }} -t mergebin
@@ -73,20 +73,20 @@ jobs:
       - name: Collect binaries
         run: |
           mkdir -p out
-          NAME="MeshBBS_${{ matrix.env }}"; NAME="${NAME%_bbs}"
-          cp meshbbs/firmware/.pio/build/${{ matrix.env }}/firmware-merged.bin "out/${NAME}-${BBS_VERSION}-merged.bin"
-          cp meshbbs/firmware/.pio/build/${{ matrix.env }}/firmware.bin        "out/${NAME}-${BBS_VERSION}-app.bin"
+          NAME="MeshXpress_${{ matrix.env }}"; NAME="${NAME%_bbs}"
+          cp meshxpress/firmware/.pio/build/${{ matrix.env }}/firmware-merged.bin "out/${NAME}-${BBS_VERSION}-merged.bin"
+          cp meshxpress/firmware/.pio/build/${{ matrix.env }}/firmware.bin        "out/${NAME}-${BBS_VERSION}-app.bin"
           ls -la out
 
       - uses: actions/upload-artifact@v4
         with:
-          name: MeshBBS_${{ matrix.env }}-${{ env.BBS_VERSION }}
+          name: MeshXpress_${{ matrix.env }}-${{ env.BBS_VERSION }}
           path: out
 
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: MeshBBS ${{ env.BBS_VERSION }}
+          name: MeshXpress ${{ env.BBS_VERSION }}
           draft: true
           files: out/*

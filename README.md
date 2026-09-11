@@ -1,10 +1,10 @@
-# MeshBBS
+# MeshXpress
 
-An AmiExpress-flavoured BBS that runs as a MeshCore **room server**. Users log in to the
+An AmiExpress-flavoured BBS ("/X" for the mesh) that runs as a MeshCore **room server**. Users log in to the
 room as usual from the MeshCore app; the room's chat view becomes the BBS terminal.
 
 ```
--= MeshBBS =- [GENERAL]
+-= MeshXpress /X =- [GENERAL]
 R)ead L)ist E)nter J)oin
 W)ho S)tats B)ulletins C)omment
 D)oors H)andle G)oodbye
@@ -46,12 +46,12 @@ Zombie                   # pick a handle
 ### Just flash it
 
 Every push builds Heltec V3 and V4 images in GitHub Actions (artifacts on the Actions tab;
-tagged `v*` builds become draft releases). Grab `MeshBBS_Heltec_v3-<version>-merged.bin`
+tagged `v*` builds become draft releases). Grab `MeshXpress_Heltec_v3-<version>-merged.bin`
 (or `_v4`) and:
 
 ```bash
 pip install esptool
-esptool.py --chip esp32s3 --port /dev/cu.usbserial-XXXX write_flash 0x0 MeshBBS_Heltec_v3-<version>-merged.bin
+esptool.py --chip esp32s3 --port /dev/cu.usbserial-XXXX write_flash 0x0 MeshXpress_Heltec_v3-<version>-merged.bin
 ```
 
 The merged image contains bootloader, partition table and app, so it goes to address 0.

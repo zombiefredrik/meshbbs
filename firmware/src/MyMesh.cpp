@@ -378,7 +378,7 @@ void MyMesh::onAnonDataRecv(mesh::Packet *packet, const uint8_t *secret, const m
     next_push = futureMillis(PUSH_NOTIFY_DELAY_MILLIS); // delay next push, give RESPONSE packet time to arrive first
 
     if ((client->permissions & PERM_ACL_ROLE_MASK) != PERM_ACL_GUEST) {
-      // MeshBBS: greet the caller once the login RESPONSE has had time to arrive
+      // MeshXpress: greet the caller once the login RESPONSE has had time to arrive
       BbsOutput out; BbsAction act;
       _bbs->onLogin(client->id.pub_key, client->isAdmin(), getRTCClock()->getCurrentTime(), out, act);
       queueBbsOutput(client, out, PUSH_NOTIFY_DELAY_MILLIS + SERVER_RESPONSE_DELAY);
@@ -475,7 +475,7 @@ void MyMesh::onPeerDataRecv(mesh::Packet *packet, uint8_t type, int sender_idx, 
           send_ack = false; // no ACK
         } else {
           if (!is_retry) {
-            // MeshBBS: every line from a logged-in user goes through the BBS engine
+            // MeshXpress: every line from a logged-in user goes through the BBS engine
             BbsOutput out; BbsAction act;
             _bbs->onInput(client->id.pub_key, (const char *)&data[5], now, out, act);
             unsigned long after_ack = TXT_ACK_DELAY + REPLY_DELAY_MILLIS + SERVER_RESPONSE_DELAY;
@@ -693,7 +693,7 @@ void MyMesh::begin(FILESYSTEM *fs) {
   acl.load(_fs, self_id);
   region_map.load(_fs);
 
-  // MeshBBS engine, backed by the same filesystem (files under /bbs/)
+  // MeshXpress engine, backed by the same filesystem (files under /bbs/)
   _bbs_fs = new ArduinoFsAdapter(*_fs);
   _bbs_store = new BbsStorage(*_bbs_fs);
   _bbs = new BbsEngine(*_bbs_store, _prefs.node_name, getRTCClock()->getCurrentTime());
@@ -965,7 +965,7 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
   }
 }
 
-// ---------------- MeshBBS glue ----------------
+// ---------------- MeshXpress glue ----------------
 
 void MyMesh::bbsCommand(uint32_t sender_timestamp, const char* cmd, char* reply) {
   const size_t reply_max = 150;   // callers hand us ~160 bytes, minus optional 3-byte CLI prefix
@@ -1054,7 +1054,7 @@ bool MyMesh::saveFilter(ClientInfo* client) {
 void MyMesh::loop() {
   mesh::Mesh::loop();
 
-  // MeshBBS: send at most one queued page per pass
+  // MeshXpress: send at most one queued page per pass
   for (int i = 0; i < BBS_PAGE_QUEUE; i++) {
     if (_bbs_queue[i].used && millisHasNowPassed(_bbs_queue[i].send_at)) {
       auto c = acl.getClient(_bbs_queue[i].pubkey, PUB_KEY_SIZE);

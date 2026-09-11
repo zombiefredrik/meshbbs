@@ -166,7 +166,7 @@ void BbsEngine::onLogin(const uint8_t* pubkey, bool is_admin, uint32_t now, BbsO
 }
 
 void BbsEngine::showBanner(BbsSession& s, BbsUser& u, Pager& out) {
-  out.printf("-= %s =- Welcome back, %s! Call #%lu\n", _name, s.handle, (unsigned long)u.calls);
+  out.printf("-= %s /X =- Welcome back, %s! Call #%lu\n", _name, s.handle, (unsigned long)u.calls);
   out.text("New: ");
   bool first = true;
   for (int a = 0; a < BBS_MAX_AREAS; a++) {
@@ -180,7 +180,7 @@ void BbsEngine::showBanner(BbsSession& s, BbsUser& u, Pager& out) {
 }
 
 void BbsEngine::showMenu(BbsSession& s, Pager& out) {
-  out.printf("-= %s =- [%s]\n", _name, BBS_AREAS[s.area].name);
+  out.printf("-= %s /X =- [%s]\n", _name, BBS_AREAS[s.area].name);
   out.line("R)ead L)ist E)nter J)oin");
   out.line("W)ho S)tats B)ulletins C)omment");
   out.line("D)oors H)andle G)oodbye");

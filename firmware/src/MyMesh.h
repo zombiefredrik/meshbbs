@@ -127,7 +127,7 @@ class MyMesh : public mesh::Mesh, public CommonCLICallbacks {
   uint8_t pending_cr;
   int  matching_peer_indexes[MAX_CLIENTS];
 
-  // ---- MeshBBS ----
+  // ---- MeshXpress ----
   struct BbsPage {
     bool used;
     uint8_t pubkey[PUB_KEY_SIZE];

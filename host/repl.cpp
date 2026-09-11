@@ -30,11 +30,11 @@ int main(int argc, char** argv) {
   StdioFs fs(dir);
   BbsStorage st(fs);
   uint32_t now = (uint32_t)time(NULL);
-  BbsEngine bbs(st, "MeshBBS", now);
+  BbsEngine bbs(st, "MeshXpress", now);
   uint8_t key[BBS_PUBKEY_LEN];
   char who[32] = "";
   BbsOutput out; BbsAction act;
-  printf("MeshBBS host REPL. Data in %s. Start with: !login <name> [admin]\n", dir);
+  printf("MeshXpress host REPL. Data in %s. Start with: !login <name> [admin]\n", dir);
   char line[512];
   while (printf("%s> ", who[0] ? who : "(nobody)"), fflush(stdout), fgets(line, sizeof(line), stdin)) {
     line[strcspn(line, "\r\n")] = 0;

@@ -1,5 +1,5 @@
 #pragma once
-// MeshBBS core types. Portable C++17, no Arduino dependencies.
+// MeshXpress core types. Portable C++17, no Arduino dependencies.
 #include <stdint.h>
 #include <string.h>
 
