@@ -1,0 +1,8 @@
+firmware/.pio/
+host/repl
+host/tests
+host/testdata/
+host/bbsdata/
+host/demo/
+*.dSYM/
+.DS_Store
