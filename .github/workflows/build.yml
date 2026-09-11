@@ -25,6 +25,9 @@ jobs:
   firmware:
     runs-on: ubuntu-latest
     needs: host-tests
+    strategy:
+      matrix:
+        env: [Heltec_v3_bbs, Heltec_v4_bbs]
     steps:
       - name: Checkout meshbbs
         uses: actions/checkout@v4
@@ -61,22 +64,23 @@ jobs:
           echo "BBS_VERSION=$V" >> $GITHUB_ENV
           echo "BBS_DATE=$(date '+%d-%b-%Y')" >> $GITHUB_ENV
 
-      - name: Build Heltec_v3_bbs
+      - name: Build ${{ matrix.env }}
         working-directory: meshbbs/firmware
         env:
           PLATFORMIO_BUILD_FLAGS: -D FIRMWARE_VERSION='"${{ env.BBS_VERSION }}"' -D FIRMWARE_BUILD_DATE='"${{ env.BBS_DATE }}"'
-        run: pio run -e Heltec_v3_bbs -t mergebin
+        run: pio run -e ${{ matrix.env }} -t mergebin
 
       - name: Collect binaries
         run: |
           mkdir -p out
-          cp meshbbs/firmware/.pio/build/Heltec_v3_bbs/firmware-merged.bin "out/MeshBBS_Heltec_v3-${BBS_VERSION}-merged.bin"
-          cp meshbbs/firmware/.pio/build/Heltec_v3_bbs/firmware.bin        "out/MeshBBS_Heltec_v3-${BBS_VERSION}-app.bin"
+          NAME="MeshBBS_${{ matrix.env }}"; NAME="${NAME%_bbs}"
+          cp meshbbs/firmware/.pio/build/${{ matrix.env }}/firmware-merged.bin "out/${NAME}-${BBS_VERSION}-merged.bin"
+          cp meshbbs/firmware/.pio/build/${{ matrix.env }}/firmware.bin        "out/${NAME}-${BBS_VERSION}-app.bin"
           ls -la out
 
       - uses: actions/upload-artifact@v4
         with:
-          name: MeshBBS_Heltec_v3-${{ env.BBS_VERSION }}
+          name: MeshBBS_${{ matrix.env }}-${{ env.BBS_VERSION }}
           path: out
 
       - name: Release

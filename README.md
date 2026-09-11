@@ -28,7 +28,7 @@ D)oors H)andle G)oodbye
 |---|---|
 | `core/` | portable C++17 engine, no Arduino dependencies (`BbsEngine`, `BbsStorage`, `Pager`, `Doors`) |
 | `host/` | Mac/Linux REPL + scenario tests over plain files |
-| `firmware/` | PlatformIO project for Heltec LoRa32 V3, builds against `../MeshCore-upstream` as a library |
+| `firmware/` | PlatformIO project for Heltec LoRa32 V3 and V4, builds against `../MeshCore-upstream` as a library |
 
 ## Host: try it without hardware
 
@@ -45,8 +45,9 @@ Zombie                   # pick a handle
 
 ### Just flash it
 
-Every push builds a Heltec V3 image in GitHub Actions (artifact on the Actions tab; tagged
-`v*` builds become draft releases). Grab `MeshBBS_Heltec_v3-<version>-merged.bin` and:
+Every push builds Heltec V3 and V4 images in GitHub Actions (artifacts on the Actions tab;
+tagged `v*` builds become draft releases). Grab `MeshBBS_Heltec_v3-<version>-merged.bin`
+(or `_v4`) and:
 
 ```bash
 pip install esptool
@@ -65,7 +66,7 @@ https://github.com/meshcore-dev/MeshCore). `firmware/lib/ed25519` is a symlink i
 
 ```bash
 cd firmware
-pio run -e Heltec_v3_bbs                    # build
+pio run -e Heltec_v3_bbs                    # build (or -e Heltec_v4_bbs)
 pio run -e Heltec_v3_bbs -t mergebin        # + single flashable image (firmware-merged.bin)
 pio run -e Heltec_v3_bbs -t upload          # flash (Heltec on USB)
 pio device monitor                          # serial console = sysop console
